@@ -27,8 +27,10 @@ public:
     {}
 
     TexturedObject3D(Object3D obj, std::string name, Texture text, std::vector<std::vector<glm::dvec2>>& coord):
-    object(obj), texture(text), textCoord(coord), name(name)
-    {}
+    object(obj), texture(text), textCoord(coord), name(name), face_materials(obj.faces.size(), "default")
+    {
+        materials["default"] = Material();
+    }
 
     bool has_vertex_normals() const {
         return object.has_vertex_normals;
@@ -61,6 +63,14 @@ public:
         return textCoord[i];
     }
 
+    const std::unordered_map<std::string, Material>& mats() const {
+        return materials;
+    }
+
+    const std::vector<std::string>& f_mats() const {
+        return face_materials;
+    }
+
     const Texture& getTexture() const {
         return texture;
     }
@@ -87,7 +97,7 @@ public:
         std::vector<TexturedObject3D> objects;
         std::vector<std::string> f_mats;
         bool use_texture = false, use_v_normals = false, o_flag = false;
-        Texture tex(sf::Color::Red);
+        Texture tex(sf::Color::White);
         while (!file.eof()) {
             std::getline(file, line, file.widen('\n'));
             if (line.size() == 0) {
@@ -136,7 +146,6 @@ public:
                     ss.clear();
                     ss.str(line);
                     ss >> kw;
-                    // std::cout << kw << std::endl;
                     // Read vertex
                     if (kw == "v") {
                         glm::dvec3 v;

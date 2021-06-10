@@ -27,7 +27,7 @@ public:
     x(x), y(y), z(z), coord(crd), u(u), v(v), norm(glm::normalize(n))
     {}
 
-    void draw(FrameBuffer& buffer, ZBuffer& zb, const Texture& text, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos) {
+    void draw(FrameBuffer& buffer, ZBuffer& zb, const Texture& text, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos, const Material& m) {
         if (zb.fill_at(x, y, z)) {
             glm::dvec3 c(0.);
             for (uint32_t i = 0; i < lights.size(); ++i) {
@@ -36,7 +36,7 @@ public:
                 switch (l->getType())
                 {
                 case LightSourceType::Ambient: {
-                    c += text.getPixelUV_d(u, v) * l->colorAt(l_pos, coord);
+                    c += text.getPixelUV_d(u, v) * m.get_Kd() * l->colorAt(l_pos, coord);
                     break;
                 }
                 // case LightSourceType::Directional: {
@@ -46,8 +46,7 @@ public:
                 //     break;
                 default: {
                     auto to_v = glm::normalize(-coord), l_dir = l->dirTo(l_pos, coord), h = glm::normalize(l_dir + to_v);
-                    double m = 30;
-                    glm::dvec3 t = l->colorAt(l_pos, coord) * (text.getPixelUV_d(u, v) * std::max(glm::dot(norm, l_dir), 0.) + (double)(glm::dot(l_dir, norm) > 0) * std::pow(std::max(glm::dot(h, norm), 0.), m));
+                    glm::dvec3 t = l->colorAt(l_pos, coord) * (text.getPixelUV_d(u, v) * m.get_Kd() * std::max(glm::dot(norm, l_dir), 0.) + m.get_Ks() * (double)(glm::dot(l_dir, norm) > 0) * std::pow(std::max(glm::dot(h, norm), 0.), m.get_Ns()));
                     c += t;
                     break;
                 }

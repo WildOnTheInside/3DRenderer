@@ -109,10 +109,10 @@ public:
         return line;
     }
 
-    std::vector<Point2D> draw(FrameBuffer& buffer, ZBuffer& zb, const Texture& texture, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos) const {
+    std::vector<Point2D> draw(FrameBuffer& buffer, ZBuffer& zb, const Texture& texture, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos, const Material& m) const {
         std::vector<Point2D> line = getLine(texture);
         for (Point2D& p : line) {
-            p.draw(buffer, zb, texture, lights, lights_pos);
+            p.draw(buffer, zb, texture, lights, lights_pos, m);
         }
         return line;
     }
