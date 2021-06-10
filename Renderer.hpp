@@ -77,6 +77,8 @@ private:
             new_vert[trans_vert[i]] = i;
         }
         std::vector<std::vector<uint32_t>> faces = object.faces();
+        std::vector<uint32_t> faces_left;
+        faces_left.reserve(faces.size());
         std::vector<std::pair<std::vector<int>, std::vector<glm::dvec2>>> polygons(faces.size());
         std::vector<std::vector<glm::dvec3>> new_v_norm;
         new_v_norm.reserve(faces.size());
@@ -96,6 +98,10 @@ private:
             // Clip triangle
             Polygon3D face(face_vert);
             auto [poly, textCoord, norms] = face.clip(frustrum_normals, frustrum_offsets, object.triangleTextureCoordinates(i), trans_v_norm[i]);
+            if (poly.getVertices().size() == 0) {
+                continue;
+            }
+            faces_left.push_back(i);
             for (auto new_v : poly.getVertices()) {
                 if (new_vert.find(new_v) == new_vert.end()) {
                     new_vert[new_v] = new_vert.size();
@@ -117,6 +123,8 @@ private:
             vert_coord[ind] = v;
         }
         uint32_t j = 0;
+        auto mats = object.mats();
+        auto f_mats = object.f_mats();
         for (uint32_t i = 0; i < polygons.size(); ++i) {
             // ++i;
             // Draw polygon
@@ -132,7 +140,7 @@ private:
                 vert_c.push_back(vert_coord[ind]);
             }
             Polygon2D poly(vert, vert_c, tc, new_v_norm[j], ww, wh);
-            poly.draw(fb, zb, object.getTexture(), lights, lights_pos, intp);
+            poly.draw(fb, zb, object.getTexture(), lights, lights_pos, mats[f_mats[faces_left[j]]], intp);
             ++j;
         }
     }

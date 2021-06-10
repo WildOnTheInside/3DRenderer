@@ -100,16 +100,23 @@ public:
         return {Polygon3D(vert), text, norm};
     }
 
-    friend std::ostream& operator<<(std::ostream& out, const Polygon3D& poly) {
-        for (auto v : poly.vertices) {
-            out << v.x << " " << v.y << " " << v.z << "\n";
-        }
-        out << std::endl;
-        return out;
-    }
+    // friend std::ostream& operator<<(std::ostream& out, const Polygon3D& poly) {
+    //     for (auto v : poly.vertices) {
+    //         out << v.x << " " << v.y << " " << v.z << "\n";
+    //     }
+    //     out << std::endl;
+    //     return out;
+    // }
 
     std::vector<glm::dvec3> getVertices() const {
         return vertices;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Polygon3D& p) {
+        for (const glm::dvec3& v : p.vertices) {
+            out << v << std::endl;
+        }
+        return out;
     }
 };
 

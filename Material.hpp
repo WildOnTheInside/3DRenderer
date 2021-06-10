@@ -35,6 +35,26 @@ public:
     name(name), Ka(Ka), Kd(Kd), Ks(Ks), Ke(Ke), Ns(Ns), illum(illum), map_Ka(map_Ka), map_Kd(map_Kd), map_Ks(map_Ks)
     {}
 
+    glm::dvec3 get_Ka() const {
+        return Ka;
+    }
+
+    glm::dvec3 get_Kd() const {
+        return Kd;
+    }
+
+    glm::dvec3 get_Ks() const {
+        return Ks;
+    }
+
+    glm::dvec3 get_Ke() const {
+        return Ke;
+    }
+
+    double get_Ns() const {
+        return Ns;
+    }
+
     static std::unordered_map<std::string, Material> fromFile(const std::string path) {
         std::ifstream file(path);
         size_t slash_occ = path.rfind('/');

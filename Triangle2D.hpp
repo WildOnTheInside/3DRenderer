@@ -32,10 +32,10 @@ public:
         }
     }
 
-    void draw(FrameBuffer& buffer, ZBuffer& zb, const Texture& texture, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos, const Interpolator& intp) const {
-        std::vector<Point2D> l12 = Line2D(p1, p2, intp).draw(buffer, zb, texture, lights, lights_pos);
-        std::vector<Point2D> l23 = Line2D(p2, p3, intp).draw(buffer, zb, texture, lights, lights_pos);
-        std::vector<Point2D> l13 = Line2D(p1, p3, intp).draw(buffer, zb, texture, lights, lights_pos);
+    void draw(FrameBuffer& buffer, ZBuffer& zb, const Texture& texture, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos, const Material& m, const Interpolator& intp) const {
+        std::vector<Point2D> l12 = Line2D(p1, p2, intp).draw(buffer, zb, texture, lights, lights_pos, m);
+        std::vector<Point2D> l23 = Line2D(p2, p3, intp).draw(buffer, zb, texture, lights, lights_pos, m);
+        std::vector<Point2D> l13 = Line2D(p1, p3, intp).draw(buffer, zb, texture, lights, lights_pos, m);
         l12.reserve(l12.size() + l23.size());
         l12.insert(l12.end(), l23.begin(), l23.end());
         uint32_t i = 0, j = 0;
@@ -52,7 +52,7 @@ public:
                     i++;
                 }
             }
-            Line2D(l12[i], l13[j], intp).draw(buffer, zb, texture, lights, lights_pos);
+            Line2D(l12[i], l13[j], intp).draw(buffer, zb, texture, lights, lights_pos, m);
             if (!f) {
                 x2_pred = l12[i].x;
                 while (i < l12.size() && l12[i].x == x2_pred) {

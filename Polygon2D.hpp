@@ -62,13 +62,13 @@ public:
         }
     }
 
-    void draw(FrameBuffer& fb, ZBuffer& zb, const Texture& texture, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos, const Interpolator& intp) {
+    void draw(FrameBuffer& fb, ZBuffer& zb, const Texture& texture, const std::vector<LightSource*>& lights, const std::vector<glm::dvec3>& lights_pos, const Material& m, const Interpolator& intp) {
         if (vertices.size() == 0) {
             return;
         }
         for (int i = 1; i < vertices.size() - 1; ++i) {
             auto t = Triangle2D(vertices[0], vertices[i], vertices[i + 1]);
-            t.draw(fb, zb, texture, lights, lights_pos, intp);
+            t.draw(fb, zb, texture, lights, lights_pos, m, intp);
         }
     }
 };
