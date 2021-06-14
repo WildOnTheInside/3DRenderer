@@ -17,6 +17,7 @@ public:
         double camMovInc = m_i, camRotInc = r_i;
         uint32_t ww = renderer.ww, wh = renderer.wh;
         sf::RenderWindow window(sf::VideoMode(ww, wh), "3DRenderer");
+        bool focus = true;
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
@@ -31,9 +32,18 @@ public:
                         scene.setCameraAspectRatio(ww, wh);
                         window.setView(sf::View(sf::FloatRect(0, 0, ww, wh)));
                         break;
+                    case sf::Event::GainedFocus:
+                        focus = true;
+                        break;
+                    case sf::Event::LostFocus:
+                        focus = false;
+                        break;
                     default:
                         break;
                 }
+            }
+            if (!focus) {
+                continue;
             }
             int r = 0, u = 0, f = 0;
             int rotU = 0, rotR = 0;
