@@ -8,7 +8,6 @@
 #include "Line2D.hpp"
 #include "FrameBuffer.hpp"
 #include "Camera.hpp"
-#include "Primitives.hpp"
 #include "ZBuffer.hpp"
 #include "Triangle2D.hpp"
 #include "TexturedObject3D.hpp"
