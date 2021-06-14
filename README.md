@@ -5,8 +5,8 @@ To build a project run source/build.bat script.
 Then run bin/renderer.exe to run renderer.
 
 Camera movement:
-  Up / Down arrows --- move camera forward / backward
-  Left / Right arrows --- move camera left / right
-  Space / Alt --- move camera up / down
-  W / S --- rotate camera up / down
-  A / D --- rotate camera left / right
+  Up / Down arrows --- move camera forward / backward  
+  Left / Right arrows --- move camera left / right  
+  Space / Alt --- move camera up / down  
+  W / S --- rotate camera up / down  
+  A / D --- rotate camera left / right  
