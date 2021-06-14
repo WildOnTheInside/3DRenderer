@@ -15,7 +15,7 @@ public:
 
     void run(double m_i = 0.1, double r_i = 0.05) {
         double camMovInc = m_i, camRotInc = r_i;
-        uint32_t ww = renderer.ww, wh = renderer.wh;
+        auto [ww, wh] = renderer.getSize();
         sf::RenderWindow window(sf::VideoMode(ww, wh), "3DRenderer");
         bool focus = true;
         while (window.isOpen()) {

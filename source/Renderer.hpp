@@ -189,5 +189,8 @@ public:
         zb.resize(w, h);
         fb.resize(w, h);
     }
-    friend class Application;
+
+    std::pair<uint32_t, uint32_t> getSize() const {
+        return {ww, wh};
+    }
 };
