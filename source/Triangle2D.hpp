@@ -68,6 +68,6 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& out, const Triangle2D& t) {
-        out << t.p1 << " " << t.p2 << " " << t.p3 << std::endl;
+        return out << t.p1 << " " << t.p2 << " " << t.p3 << std::endl;
     }
 };
