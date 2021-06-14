@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_COMPILER "path/to/compiler")
-set(SFML_DIR "your/SFML/dir")
-set(glm_DIR "your/glm/dir")
+# set(CMAKE_CXX_COMPILER "path/to/compiler")
+set(SFML_DIR "../lib/SFML/SFML-2.5.1/lib/cmake/SFML")
+set(glm_DIR "../lib/glm-0.9.9.8/cmake/glm")
 set(CMAKE_BUILD_TYPE Release)
 
 project(renderer)
