@@ -42,6 +42,57 @@ private:
         return false;
     }
 
+    static void transformVertices(
+                    const std::vector<glm::dvec3>& vertices, 
+                    std::vector<glm::dvec3>& trans_vert, 
+                    const glm::dmat4& trans) 
+    {
+        for (auto v : vertices) {
+            glm::dvec4 t(v, 1.);
+            glm::dvec4 t_trans = trans * t;
+            trans_vert.push_back(t_trans);
+        }
+    }
+
+    static void transformVertNormals(
+                    const std::vector<std::vector<glm::dvec3>>& v_normals,
+                    std::vector<std::vector<glm::dvec3>>& trans_v_norm,
+                    const glm::dmat3& norm_trans) 
+    {
+        for (auto& f : v_normals) {
+            std::vector<glm::dvec3> tmp;
+            for (auto& v_n : f) {
+                tmp.push_back(glm::normalize(norm_trans * v_n));
+            }
+            trans_v_norm.push_back(tmp);
+        }
+    }
+
+    static void getFaceVertices(
+                    const std::vector<uint32_t>& face_ind,
+                    std::vector<glm::dvec3>& face_vert,
+                    const std::vector<glm::dvec3>& trans_vert)
+    {
+        for (auto ind : face_ind) {
+            face_vert.push_back(trans_vert[ind]);
+        }
+    }
+
+    static void projectVertices(
+                    const std::map<glm::dvec3, int, decltype(cmp)*>& new_vert, 
+                    std::vector<glm::dvec3>& vert_coord,
+                    std::vector<glm::dvec3>& proj_vert,
+                    const glm::dmat4& mvp) 
+    {
+        for (auto [v, ind] : new_vert) {
+            glm::dvec4 t(v, 1.);
+            glm::dvec4 t_proj = mvp * t;
+            t_proj /= t_proj.w;
+            proj_vert[ind] = t_proj;
+            vert_coord[ind] = v;
+        }
+    }
+
     void renderObject(
         const TexturedObject3D& object,     // Object to be rendered
         const glm::dmat4& transform,        // Local-to-world transform matrix for vertices
@@ -68,18 +119,8 @@ private:
         trans_vert.reserve(object.vertices().size());
         trans_v_norm.reserve(object.faces().size());
 
-        for (auto v : object.vertices()) {
-            glm::dvec4 t(v, 1.);
-            glm::dvec4 t_trans = trans * t;
-            trans_vert.push_back(t_trans);
-        }
-        for (auto& f : object.v_normals()) {
-            std::vector<glm::dvec3> tmp;
-            for (auto& v_n : f) {
-                tmp.push_back(glm::normalize(norm_trans * v_n));
-            }
-            trans_v_norm.push_back(tmp);
-        }
+        transformVertices(object.vertices(), trans_vert, trans);
+        transformVertNormals(object.v_normals(), trans_v_norm, norm_trans);
         std::map<glm::dvec3, int, decltype(cmp)*> new_vert(cmp);
         for (int i = 0; i != object.vertices().size(); ++i) {
             new_vert[trans_vert[i]] = i;
@@ -93,16 +134,13 @@ private:
         for (int i = 0; i != faces.size(); ++i) {
             // Backface culling:
             // Check polygon for visibility
-            std::vector<uint32_t> face_ind = faces[i];
-            std::vector<glm::dvec3> face_vert;
-            face_vert.reserve(face_ind.size());
-            for (auto ind : face_ind) {
-                face_vert.push_back(trans_vert[ind]);
-            }
             glm::dvec3 norm = norm_trans * object.f_normals()[i];
-            if (glm::dot(norm, face_vert[0]) > 0.0001) {
+            if (glm::dot(norm, trans_vert[faces[i][0]]) > 0.0001) {
                 continue;
             }
+            std::vector<glm::dvec3> face_vert;
+            getFaceVertices(faces[i], face_vert, trans_vert);
+            
             // Clip polygon
             Polygon3D face(face_vert);
             std::vector<glm::dvec2> tc;
@@ -127,13 +165,7 @@ private:
         // Project vertices
         std::vector<glm::dvec3> vert_coord(new_vert.size());
         proj_vert.resize(new_vert.size());
-        for (auto [v, ind] : new_vert) {
-            glm::dvec4 t(v, 1.);
-            glm::dvec4 t_proj = mvp * t;
-            t_proj /= t_proj.w;
-            proj_vert[ind] = t_proj;
-            vert_coord[ind] = v;
-        }
+        projectVertices(new_vert, vert_coord, proj_vert, mvp);
         uint32_t j = 0;
         auto mats = object.mats();
         auto f_mats = object.f_mats();
