@@ -28,7 +28,7 @@ public:
     vertices({})
     {}
 
-    std::tuple<Polygon3D, std::vector<glm::dvec2>, std::vector<glm::dvec3>> clip(const std::vector<glm::dvec3>& normals, const std::vector<double>& offsets, const std::vector<glm::dvec2>& textCoord, const std::vector<glm::dvec3>& v_normals) {
+    std::tuple<Polygon3D, std::vector<glm::dvec2>, std::vector<glm::dvec3>> clip(const std::vector<glm::dvec3>& normals, const std::vector<double>& offsets, const std::vector<glm::dvec2>& textCoord, const std::vector<glm::dvec3>& v_normals) const {
         std::vector<glm::dvec3> vert(vertices);
         std::vector<glm::dvec2> text(textCoord);
         std::vector<glm::dvec3> norm(v_normals);
