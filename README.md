@@ -10,3 +10,8 @@ Camera movement:
   Space / Alt &mdash; move camera up / down  
   W / S &mdash; rotate camera up / down  
   A / D &mdash; rotate camera left / right  
+
+Some examples:
+![](examples/render_2.png)
+![](examples/render_4.png)
+![](examples/render_5.png)
